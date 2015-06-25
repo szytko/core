@@ -91,7 +91,7 @@ abstract class CollectionAbstract extends Collection implements MapperInterface
     private static function mapField($className, $value)
     {
         $class = new \ReflectionClass($className);
-        return $class->getMethod('factory')->invoke(null, $value);
+        return $class->getMethod('map')->invoke(null, $value);
     }
 
     protected static function mapRow($metadata, &$row)
@@ -143,7 +143,7 @@ abstract class CollectionAbstract extends Collection implements MapperInterface
             if (isset($metadata[$object])) {
                 $reflectionClass = new \ReflectionClass($metadata[$object]);
                 if ($reflectionClass->isSubclassOf(MapperInterface::class)) {
-                    $this->{$object} = $reflectionClass->getMethod('toScalar')->invoke(null, $this->{$object});
+                    $this->{$object} = $reflectionClass->getMethod('extract')->invoke(null, $this->{$object});
                 }
             }
         }
