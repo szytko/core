@@ -29,5 +29,10 @@ $di->set('modelManager', function() use ($di) {
 $di->set('db', function() use ($config) {
     return new \Phalcon\Db\Adapter\Pdo\Mysql($config->db->toArray());
 }, true);
+$di->set('mappingAnnotationReader', function() use ($di) {
+    $reader = new \Phalcon\Annotations\Adapter\Memory();
+
+    return $reader;
+});
 
 Phalcon\DI::setDefault($di);
