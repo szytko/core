@@ -50,6 +50,38 @@ class ModuleTask extends TaskAbstract
     }
 
     /**
+     * Creates new module
+     */
+    public function createAction()
+    {
+        $this->putText("Creating new module...");
+
+        if ($this->isConfigured()) {
+            $config = $this->getDI()->get('config');
+
+            $moduleDir = $config->application->moduleDir;
+            $moduleName = $this->getOption('name');
+
+            $modulePath = $moduleDir . $moduleName;
+
+            if(!file_exists($modulePath)) {
+
+                mkdir($modulePath);
+                mkdir($modulePath . '/controller');
+                mkdir($modulePath . '/models');
+                mkdir($modulePath . '/forms');
+                mkdir($modulePath . '/services');
+                mkdir($modulePath . '/views');
+
+                $this->putSuccess("Done.");
+
+            } else {
+                $this->putError('Module directory already exists');
+            }
+        }
+    }
+
+    /**
      * @return bool
      */
     private function isConfigured()
@@ -72,6 +104,14 @@ class ModuleTask extends TaskAbstract
     public function setupOptions()
     {
         $action = new Action('dump', 'Dump modules & services files');
+        $this->addTaskAction($action);
+
+        $action = new Action('create', 'Creates new module');
+
+        $option = new Task\Option('name', 'n', 'Module name');
+        $option->setRequired(true);
+        $action->addOption($option);
+
         $this->addTaskAction($action);
     }
 }
