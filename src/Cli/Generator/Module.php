@@ -12,7 +12,7 @@
 
 namespace Vegas\Cli\Generator;
 
-use Vegas\Cli\Generator\Exception\ModuleExistsException;
+use Vegas\Cli\Generator\Exception\ModuleAlreadyExistsException;
 use Vegas\Cli\Generator\Exception\ModuleNameNotFoundException;
 use Vegas\Cli\Generator\Exception\PathNotFoundException;
 
@@ -65,7 +65,7 @@ class Module
 
         $modulePath = $this->path . '/' . $this->moduleName;
         if(file_exists($modulePath)) {
-            throw new ModuleExistsException();
+            throw new ModuleAlreadyExistsException();
         }
 
         mkdir($modulePath);

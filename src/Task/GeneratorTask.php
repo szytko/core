@@ -13,59 +13,39 @@
 namespace Vegas\Task;
 
 use Phalcon\DI;
-use Vegas\Cli\Generator\Module;
+use Vegas\Cli\Generator\Task;
 use Vegas\Cli\Task\Action;
-use Vegas\Cli\Task;
+use Vegas\Cli\Task\Option;
 use Vegas\Cli\TaskAbstract;
 
 /**
  * Class GeneratorTask
  * @package Vegas\Task
  */
-class ModuleTask extends TaskAbstract
+class GeneratorTask extends TaskAbstract
 {
-    /**
-     * Dumps modules & services files used for application autoloading
-     */
-    public function dumpAction()
-    {
-        $this->putText("Dumping modules & services files...");
-
-        if ($this->isConfigured()) {
-            $config = $this->getDI()->get('config');
-
-            $moduleLoader = new \Vegas\Mvc\Module\Loader($this->getDI());
-            $moduleLoader->dump(
-                $config->application->moduleDir,
-                $config->application->configDir
-            );
-
-            $serviceProviderLoader = new \Vegas\DI\ServiceProviderLoader($this->getDI());
-            $serviceProviderLoader->autoload(
-                $config->application->serviceDir,
-                $config->application->configDir
-            );
-
-            $this->putSuccess("Done.");
-        }
-    }
 
     /**
-     * Creates new module
+     * Creates new task
      */
-    public function createAction()
+    public function taskAction()
     {
-        $this->putText("Creating new module...");
+        $this->putText("Creating new task...");
 
         if ($this->isConfigured()) {
             $config = $this->getDI()->get('config');
 
             $moduleDir = $config->application->moduleDir;
-            $moduleName = $this->getOption('name');
+            $moduleName = $this->getOption('module-name');
+            $taskName = $this->getOption('name');
+            $actions = $this->getOption('action');
 
             try {
 
-                $generator = new Module($moduleName);
+                $generator = new Task($moduleName, $taskName);
+                if($actions != null) {
+                    $generator->addAction($actions);
+                }
                 $generator->setPath($moduleDir);
                 $generator->run();
 
@@ -104,7 +84,7 @@ class ModuleTask extends TaskAbstract
 
         $action = new Action('create', 'Creates new module');
 
-        $option = new Task\Option('name', 'n', 'Module name');
+        $option = new Option('name', 'n', 'Module name');
         $option->setRequired(true);
         $action->addOption($option);
 

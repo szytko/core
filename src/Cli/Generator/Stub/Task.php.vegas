@@ -1,0 +1,42 @@
+<?php
+/**
+ * Created by Vegas CLI Generator
+ *
+ * @author Vegas CMF
+ * @copyright Amsterdam Standard Sp. Z o.o.
+ * @homepage http://vegas-cmf.github.io
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace %%moduleName%%\Tasks;
+
+use Vegas\Cli\Task\Action;
+use Vegas\Cli\Task\Option;
+use Vegas\Cli\TaskAbstract;
+
+class %%taskName%%Task extends TaskAbstract
+{
+
+    public function %%actionName%%Action()
+    {
+
+    }
+
+    public function setupOptions()
+    {
+        $action = new Action('%%actionName%%', 'Action description');
+
+        $option = new Option('option1', 'op', 'Option 1');
+        $option->setRequired(true);
+        $action->addOption($option);
+
+        $option = new Option('option2', 'opp', 'Option 2');
+        $option->setRequired(true);
+        $action->addOption($option);
+
+        $this->addTaskAction($action);
+    }
+
+} 

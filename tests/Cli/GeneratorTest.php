@@ -13,38 +13,158 @@ namespace Vegas\Tests\Cli;
 
 
 use Vegas\Cli\Generator\Controller;
-use Vegas\Cli\Generator\Exception\ModuleNameNotFoundException;
 use Vegas\Cli\Generator\Model;
 use Vegas\Cli\Generator\Module;
 use Vegas\Cli\Generator\StubCreator;
+use Vegas\Cli\Generator\Task;
 
 class GeneratorTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testModuleGenerator()
+    private $path;
+
+    public function setUp()
     {
-        $path = TESTS_ROOT_DIR . '/fixtures/app/modules';
-        @unlink($path . '/ModuleTest');
+        $this->path = TESTS_ROOT_DIR . '/fixtures/app/modules';
+
+        @unlink($this->path . '/ModuleTest/Module.php');
+        @rmdir($this->path . '/ModuleTest/controller');
+        @rmdir($this->path . '/ModuleTest/forms');
+        @rmdir($this->path . '/ModuleTest/tasks');
+        @rmdir($this->path . '/ModuleTest/services');
+        @rmdir($this->path . '/ModuleTest/views');
+        @rmdir($this->path . '/ModuleTest/models');
+        @rmdir($this->path . '/ModuleTest');
+
+    }
+
+    public function tearDown()
+    {
+        @unlink($this->path . '/ModuleTest/tasks/TestTask.php');
+        @rmdir($this->path . '/ModuleTest/tasks');
+        @rmdir($this->path . '/ModuleTest/controller');
+        @rmdir($this->path . '/ModuleTest/services');
+        @rmdir($this->path . '/ModuleTest/views');
+        @rmdir($this->path . '/ModuleTest/forms');
+        @rmdir($this->path . '/ModuleTest/models');
+        @rmdir($this->path . '/ModuleTest');
+    }
+
+    public function testTaskGenerator()
+    {
 
         $generator = new Module('ModuleTest');
-        $generator->setPath($path);
+        $generator->setPath($this->path);
         $generator->run();
 
-        $this->assertFileExists($path . '/ModuleTest');
-        $this->assertFileExists($path . '/ModuleTest/controller');
-        $this->assertFileExists($path . '/ModuleTest/models');
-        $this->assertFileExists($path . '/ModuleTest/forms');
-        $this->assertFileExists($path . '/ModuleTest/services');
-        $this->assertFileExists($path . '/ModuleTest/views');
-        $this->assertFileExists($path . '/ModuleTest/Module.php');
+        $taskGenerator = new Task('ModuleTest', 'test');
+        $taskGenerator->setPath($this->path);
+        $taskGenerator->run();
 
-        unlink($path . '/ModuleTest/Module.php');
-        rmdir($path . '/ModuleTest/controller');
-        rmdir($path . '/ModuleTest/models');
-        rmdir($path . '/ModuleTest/forms');
-        rmdir($path . '/ModuleTest/services');
-        rmdir($path . '/ModuleTest/views');
-        rmdir($path . '/ModuleTest');
+        $this->assertFileExists($this->path . '/ModuleTest/tasks');
+        $this->assertFileExists($this->path . '/ModuleTest/tasks/TestTask.php');
+
+    }
+
+    public function testModuleGenerator()
+    {
+        $generator = new Module('ModuleTest');
+        $generator->setPath($this->path);
+        $generator->run();
+
+        $this->assertFileExists($this->path . '/ModuleTest');
+        $this->assertFileExists($this->path . '/ModuleTest/controller');
+        $this->assertFileExists($this->path . '/ModuleTest/models');
+        $this->assertFileExists($this->path . '/ModuleTest/forms');
+        $this->assertFileExists($this->path . '/ModuleTest/services');
+        $this->assertFileExists($this->path . '/ModuleTest/views');
+        $this->assertFileExists($this->path . '/ModuleTest/Module.php');
+    }
+
+    public function testTaskAddAction()
+    {
+        $generator = new Module('ModuleTest');
+        $generator->setPath($this->path);
+        $generator->run();
+
+        $taskGenerator = new Task('ModuleTest', 'test');
+        $taskGenerator->setPath($this->path);
+        $taskGenerator->addAction('test1');
+        $taskGenerator->run();
+
+        $content = file_get_contents($this->path . '/ModuleTest/tasks/TestTask.php');
+
+        $result = preg_match_all("/public function test1Action/", $content);
+
+        $this->assertEquals(1, $result);
+    }
+
+    /**
+     * @expectedException \Vegas\Cli\Generator\Exception\PathNotFoundException
+     */
+    public function testTaskPathNotFoundException()
+    {
+        $generator = new Module('ModuleTest');
+        $generator->setPath($this->path);
+        $generator->run();
+
+        $taskGenerator = new Task('ModuleTest', 'test');
+        $taskGenerator->run();
+    }
+
+    /**
+     * @expectedException \Vegas\Cli\Generator\Exception\ModuleNameNotFoundException
+     */
+    public function testTaskModuleNotFoundException()
+    {
+        $generator = new Module('ModuleTest');
+        $generator->setPath($this->path);
+        $generator->run();
+
+        $taskGenerator = new Task(null, 'test');
+    }
+
+    /**
+     * @expectedException \Vegas\Cli\Generator\Exception\ModuleNotExistsException
+     */
+    public function testTaskModuleNotExistsException()
+    {
+        $taskGenerator = new Task('ModuleTest', 'test');
+        $taskGenerator->setPath($this->path);
+        $taskGenerator->run();
+    }
+
+    /**
+     * @expectedException \Vegas\Cli\Generator\Exception\TaskAlreadyExistsException
+     */
+    public function testTaskAlreadyExistsException()
+    {
+        $generator = new Module('ModuleTest');
+        $generator->setPath($this->path);
+        $generator->run();
+
+        $taskGenerator = new Task('ModuleTest', 'test');
+        $taskGenerator->setPath($this->path);
+        $taskGenerator->run();
+
+//        $taskGenerator = new Task('ModuleTest', 'test');
+//        $taskGenerator->setPath($this->path);
+        $taskGenerator->run();
+    }
+
+    /**
+     * @expectedException \Vegas\Cli\Generator\Exception\TaskNotFoundException
+     */
+    public function testTaskNotFoundException()
+    {
+
+        $generator = new Module('ModuleTest');
+        $generator->setPath($this->path);
+        $generator->run();
+
+        $taskGenerator = new Task('ModuleTest', null);
+        $taskGenerator->setPath($this->path);
+        $taskGenerator->run();
 
     }
 
@@ -74,7 +194,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Vegas\Cli\Generator\Exception\ModuleExistsException
+     * @expectedException \Vegas\Cli\Generator\Exception\ModuleAlreadyExistsException
      */
     public function testModuleExistsException()
     {

@@ -2,7 +2,7 @@
 /**
  * This file is part of Vegas package
  *
- * @author Mateusz Aniołek <mateusz.aniolek@amsterdam-standard.pl>
+ * @author Slawomir Zytko <slawek@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
  * @homepage http://vegas-cmf.github.io
  *
@@ -12,18 +12,18 @@
  
 namespace Vegas\Cli\Generator\Exception;
 
-use Vegas\Cli\Generator\Exception;
+use Vegas\Cli\Generator\Exception as Exception;
 
 /**
- * Class ModuleExistsException
+ * Class TaskAlreadyExistsException
  * @package Vegas\Cli\Exception
  */
-class ModuleExistsException extends Exception
+class TaskAlreadyExistsException extends Exception
 {
     /**
      * Exception default message
      *
      * @var string
      */
-    protected $message = 'Module exists';
+    protected $message = 'Task already exists';
 }
