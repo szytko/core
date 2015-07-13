@@ -38,6 +38,16 @@ class MvcTest extends TestCase
         $this->assertContains("Done.", $result);
 
     }
+    public function testGeneratorAction()
+    {
+        $result = $this->runCliAction('cli/cli.php vegas:generator task -m FoobarModule -n taskname -a test1');
+
+        $this->assertFileExists(TESTS_ROOT_DIR.'/fixtures/app/modules/FoobarModule/tasks/TasknameTask.php');
+
+        $this->assertContains("Done.", $result);
+
+    }
+
 
     /**
      * @expectedException \Vegas\Cli\Generator\Exception\ModuleAlreadyExistsException

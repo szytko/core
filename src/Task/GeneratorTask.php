@@ -79,13 +79,17 @@ class GeneratorTask extends TaskAbstract
      */
     public function setupOptions()
     {
-        $action = new Action('dump', 'Dump modules & services files');
-        $this->addTaskAction($action);
+        $action = new Action('task', 'Creates new module');
 
-        $action = new Action('create', 'Creates new module');
-
-        $option = new Option('name', 'n', 'Module name');
+        $option = new Option('module-name', 'm', 'Module name');
         $option->setRequired(true);
+        $action->addOption($option);
+
+        $option = new Option('name', 'n', 'Task name');
+        $option->setRequired(true);
+        $action->addOption($option);
+
+        $option = new Option('action', 'a', 'Action name');
         $action->addOption($option);
 
         $this->addTaskAction($action);
