@@ -25,8 +25,8 @@ use Vegas\Cli\Generator\Exception\PathNotFoundException;
  */
 class Task
 {
-
     const DEFAULT_ACTION_NAME = 'default';
+
     /**
      * @var null
      */

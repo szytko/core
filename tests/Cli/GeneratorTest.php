@@ -20,7 +20,6 @@ use Vegas\Cli\Generator\Task;
 
 class GeneratorTest extends \PHPUnit_Framework_TestCase
 {
-
     private $path;
 
     public function setUp()
@@ -147,8 +146,6 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $taskGenerator->setPath($this->path);
         $taskGenerator->run();
 
-//        $taskGenerator = new Task('ModuleTest', 'test');
-//        $taskGenerator->setPath($this->path);
         $taskGenerator->run();
     }
 
