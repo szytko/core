@@ -23,14 +23,9 @@ use Vegas\Cli\Generator\Exception\PathNotFoundException;
  * Class Model
  * @package Vegas\Cli\Generator
  */
-class Task
+class Task extends GeneratorAbstract
 {
     const DEFAULT_ACTION_NAME = 'default';
-
-    /**
-     * @var null
-     */
-    private $path = null;
 
     /**
      * @var
@@ -73,14 +68,6 @@ class Task
     public function addAction($actionName)
     {
         $this->actionName = $actionName;
-    }
-
-    /**
-     * @param $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
     }
 
     /**

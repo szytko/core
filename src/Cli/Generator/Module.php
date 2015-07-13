@@ -21,13 +21,8 @@ use Vegas\Cli\Generator\Exception\PathNotFoundException;
  * Class Model
  * @package Vegas\Cli\Generator
  */
-class Module
+class Module extends GeneratorAbstract
 {
-    /**
-     * @var null
-     */
-    private $path = null;
-
     /**
      * @var
      */
@@ -44,14 +39,6 @@ class Module
         }
 
         $this->moduleName = $moduleName;
-    }
-
-    /**
-     * @param $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
     }
 
     /**

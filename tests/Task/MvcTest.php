@@ -40,7 +40,7 @@ class MvcTest extends TestCase
     }
 
     /**
-     * @expectedException \Vegas\Cli\Generator\Exception\ModuleExistsException
+     * @expectedException \Vegas\Cli\Generator\Exception\ModuleAlreadyExistsException
      */
     public function testCreateException()
     {

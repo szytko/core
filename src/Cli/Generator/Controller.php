@@ -21,18 +21,12 @@ use Vegas\Cli\Generator\Exception\PathNotFoundException;
  * Class Controller
  * @package Vegas\Cli\Generator
  */
-class Controller
+class Controller extends GeneratorAbstract
 {
-
     /**
      * @var array
      */
     private $actionsContainer = [];
-
-    /**
-     * @var null
-     */
-    private $path = null;
 
     /**
      * @var
@@ -87,14 +81,6 @@ class Controller
     public function addAction($name)
     {
         $this->actionsContainer[] = $name;
-    }
-
-    /**
-     * @param $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
     }
 
     /**
