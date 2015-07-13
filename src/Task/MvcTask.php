@@ -125,7 +125,7 @@ class MvcTask extends TaskAbstract
      */
     public function setupOptions()
     {
-        $action = new Action('controller', 'Crud creator');
+        $action = new Action('controller', 'Controller creator');
 
         $option = new Task\Option('module', 'm', 'Module name');
         $option->setRequired(true);

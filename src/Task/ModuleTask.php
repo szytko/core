@@ -13,6 +13,7 @@
 namespace Vegas\Task;
 
 use Phalcon\DI;
+use Vegas\Cli\Generator\Module;
 use Vegas\Cli\Task\Action;
 use Vegas\Cli\Task;
 use Vegas\Cli\TaskAbstract;
@@ -62,21 +63,16 @@ class ModuleTask extends TaskAbstract
             $moduleDir = $config->application->moduleDir;
             $moduleName = $this->getOption('name');
 
-            $modulePath = $moduleDir . $moduleName;
+            try {
 
-            if(!file_exists($modulePath)) {
-
-                mkdir($modulePath);
-                mkdir($modulePath . '/controller');
-                mkdir($modulePath . '/models');
-                mkdir($modulePath . '/forms');
-                mkdir($modulePath . '/services');
-                mkdir($modulePath . '/views');
+                $generator = new Module($moduleName);
+                $generator->setPath($moduleDir);
+                $generator->run();
 
                 $this->putSuccess("Done.");
 
-            } else {
-                $this->putError('Module directory already exists');
+            } catch(\Vegas\Cli\Exception $ex) {
+                $this->putError($ex->getMessage());
             }
         }
     }

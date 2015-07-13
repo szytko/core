@@ -13,11 +13,83 @@ namespace Vegas\Tests\Cli;
 
 
 use Vegas\Cli\Generator\Controller;
+use Vegas\Cli\Generator\Exception\ModuleNameNotFoundException;
 use Vegas\Cli\Generator\Model;
+use Vegas\Cli\Generator\Module;
 use Vegas\Cli\Generator\StubCreator;
 
 class GeneratorTest extends \PHPUnit_Framework_TestCase
 {
+
+    public function testModuleGenerator()
+    {
+        $path = TESTS_ROOT_DIR . '/fixtures/app/modules';
+        @unlink($path . '/ModuleTest');
+
+        $generator = new Module('ModuleTest');
+        $generator->setPath($path);
+        $generator->run();
+
+        $this->assertFileExists($path . '/ModuleTest');
+        $this->assertFileExists($path . '/ModuleTest/controller');
+        $this->assertFileExists($path . '/ModuleTest/models');
+        $this->assertFileExists($path . '/ModuleTest/forms');
+        $this->assertFileExists($path . '/ModuleTest/services');
+        $this->assertFileExists($path . '/ModuleTest/views');
+        $this->assertFileExists($path . '/ModuleTest/Module.php');
+
+        unlink($path . '/ModuleTest/Module.php');
+        rmdir($path . '/ModuleTest/controller');
+        rmdir($path . '/ModuleTest/models');
+        rmdir($path . '/ModuleTest/forms');
+        rmdir($path . '/ModuleTest/services');
+        rmdir($path . '/ModuleTest/views');
+        rmdir($path . '/ModuleTest');
+
+    }
+
+    /**
+     * @expectedException \Vegas\Cli\Generator\Exception\ModuleNameNotFoundException
+     */
+    public function testModuleNameNotFoundException()
+    {
+        $path = TESTS_ROOT_DIR . '/fixtures/app/modules';
+        @unlink($path . '/ModuleTest');
+
+        $generator = new Module(null);
+        $generator->setPath($path);
+        $generator->run();
+    }
+
+    /**
+     * @expectedException \Vegas\Cli\Generator\Exception\PathNotFoundException
+     */
+    public function testModulePathNotFoundException()
+    {
+        $path = TESTS_ROOT_DIR . '/fixtures/app/modules';
+        @unlink($path . '/ModuleTest');
+
+        $generator = new Module('ModuleTest');
+        $generator->run();
+    }
+
+    /**
+     * @expectedException \Vegas\Cli\Generator\Exception\ModuleExistsException
+     */
+    public function testModuleExistsException()
+    {
+        $path = TESTS_ROOT_DIR . '/fixtures/app/modules';
+        @unlink($path . '/ModuleTest');
+
+        $generator = new Module('ModuleTest');
+        $generator->setPath($path);
+        $generator->run();
+
+        $generator->run();
+    }
+
+
+
     public function testControllerGenerator()
     {
         $path = TESTS_ROOT_DIR . '/fixtures/app/modules/FoobarModule/controller';

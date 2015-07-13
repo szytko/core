@@ -22,6 +22,7 @@ class MvcTest extends TestCase
     {
         @unlink(TESTS_ROOT_DIR.'/fixtures/app/modules/FoobarModule/controller/TestController.php');
         @unlink(TESTS_ROOT_DIR.'/fixtures/app/modules/FoobarModule/models/Test.php');
+        @unlink(TESTS_ROOT_DIR.'/fixtures/app/modules/FoobarModule/Module.php');
 
         @rmdir(TESTS_ROOT_DIR.'/fixtures/app/modules/FoobarModule/controller');
         @rmdir(TESTS_ROOT_DIR.'/fixtures/app/modules/FoobarModule/forms');
@@ -36,10 +37,16 @@ class MvcTest extends TestCase
 
         $this->assertContains("Done.", $result);
 
+    }
+
+    /**
+     * @expectedException \Vegas\Cli\Generator\Exception\ModuleExistsException
+     */
+    public function testCreateException()
+    {
         $result = $this->runCliAction('cli/cli.php vegas:module create -n FoobarModule');
 
         $this->assertContains("Done.", $result);
-
     }
 
     public function testCrudAction()
